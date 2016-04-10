@@ -53,6 +53,7 @@ public class Game {
 		
 		// Init input
 		input = new Input();
+		game.addKeyListener(input);
 		
 		
 		//Game Loop
