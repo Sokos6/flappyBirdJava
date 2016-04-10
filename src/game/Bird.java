@@ -1,5 +1,6 @@
 package game;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -48,7 +49,12 @@ public class Bird implements Updatable, Renderable {
 	
 	@Override
 	public void render(Graphics2D g, float interpolation) {
-		// TODO Auto-generated method stub
+		g.setColor(Color.BLUE);
+		
+		g.drawImage(yVel <= 0 ? flapUp : flapDown, (int) x, (int) (y + (yVel * interpolation)), null);
+		
+		g.setFont(gameFont);
+		g.drawString("Score: " + score, 20, 50);
 		
 	}
 
@@ -64,6 +70,23 @@ public class Bird implements Updatable, Renderable {
 		
 		if(input.isSpacePressed()) {
 			flap();
+		}
+		
+		float[] pipeCoords = pipes.getCurrentPipe();
+		float pipeX = pipeCoords[0];
+		float pipeY = pipeCoords[1];
+		
+		if((x >= pipeX && x <= pipeX + pipes.getPipeWidth() 
+		&& (y <= pipeY || y >= pipeY + pipes.getPipeVerticalSpacing()))
+				|| y >= Game.HEIGHT) {
+			pipes.resetPipes();
+			resetBird();
+			score = 0;
+		}
+		else {
+			int currentPipeId = pipes.getCurrentPipeId();
+			score = (scoredPipe != currentPipeId) ? score + 1 : score;
+			scoredPipe = currentPipeId;
 		}
 	}
 	
